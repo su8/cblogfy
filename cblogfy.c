@@ -25,9 +25,6 @@
 #include <dirent.h>
 #include <unistd.h>
 
-#include <md4c.h>
-#include <md4c-html.h>
-
 int main (void) {
   DIR *dp = NULL;
   char buf[4096] = {""};
