@@ -1,9 +1,14 @@
-Install `pandoc` and do this:
+Install `md4c` and do this:
 
 ```bash
+git clone https://github.com/mity/md4c
+cd md4c && cmake . && make -j8 && sudo make install
+cd ../cblogfy
 make -j8 # where 8 are cpu cores and/or threads
 sudo make install
 # from the same folder:
+export PATH=$PATH:/usr/local/lib:/usr/local/include
+sudo ln -sf /usr/local/lib/libmd4c-html.so.0.5.2 /usr/lib/libmd4c-html.so.0
 cblogfy
 ```
 
