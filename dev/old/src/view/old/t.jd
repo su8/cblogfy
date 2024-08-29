@@ -1,0 +1,125 @@
+- var languages = {'php': -1, 'node': 2, 'ruby':1}
+div
+  each value, key in languages
+    p= key + ": " + value
+
+
+
+
+
+
+                  // /.modal-content
+              // /.col-xs
+            // /.modal-dialog
+          // /.modal fade in
+          // left column
+          .page-content.col-md-6.col-sm-8
+            .panel.panel-default-outline
+              .panel-body
+                noscript
+                  // javascript detection
+                  hr
+                  |                       
+                  .alert.alert-danger
+                    p
+                      | Oh snap! Is 
+                      strong Javascript
+                      |  enabled ?
+                  |                     
+                  hr
+                |                   
+                #entries-wrapper
+                // page composition tag
+              // panel-body
+            // /.panel-default
+          // /.page-content
+          // right column
+          .sidebar.col-md-3.col-sm-4
+            .panel-group
+              // hacker mode
+              .panel.panel-default-outline
+                .btn-group.btn-group-justified
+                  a#initHackerMode.btn.btn-default Hacker Mode
+                |                   
+                form#loginForm.hide.form-signin
+                  h6.form-singnin-heading.text-center Welcome back Aaron
+                  |                     
+                  .input-group
+                    span.input-group-addon &#x2694;
+                    |                       
+                    input.form-control(placeholder='GentooBox', type='text', readonly='')
+                  |                     
+                  #passwordError.form-group
+                    .input-group
+                      span.input-group-addon &#x2645;
+                      |                         
+                      input#inputPassword.form-control(placeholder='Password', type='password')
+                  |                     
+                  .text-center
+                    button#signinButton.btn.btn-primary.btn-block(type='button') Sign in
+                |                   
+                #hackerMode.hide.list-group
+                  a.list-group-item(href='#!new')
+                    strong &#x2692; New Post
+                  |                     
+                  a.list-group-item(href='#!edi')
+                    strong &#x270D; Edit Post
+                  |                     
+                  a.list-group-item(href='#!theme')
+                    strong &#x262F; Choose theme
+                  |                     
+                  a.list-group-item(href='#!settings')
+                    strong &#x2699; General Settings
+                  |                     
+                  a#browze-button.list-group-item
+                    strong &uarr; Upload files
+                  |                     
+                  a#logOut.list-group-item
+                    strong.text-danger &#x26A0; Log Out
+                  |                     
+                  input#show-file-browzer.hide(type='file', multiple='')
+                  |                     
+                  span#trololo.hide
+              // /.panel-default
+              // search form
+              .panel.panel-default
+                form
+                  .input-group
+                    input#uzer-infut.form-control(type='text', placeholder='Ask me anything')
+                    |                       
+                    .input-group-btn
+                      button#submitfutton.btn.btn-default(type='submit')
+                        | &gt;&gt;
+                  // /.input-group
+              // /.panel-default
+              // recent posts sidebar
+              #recentBar.panel.panel-default
+                .panel-heading
+                  h3.panel-title Recent Posts
+                |                   
+                .list-group
+                  #recent-posts
+                  // recent posts composition tag
+              // /.panel-default
+              // categories sidebar
+              #CategoriesBar.panel.panel-default
+                .panel-heading
+                  h3.panel-title Categories
+                |                   
+                .list-group
+                  #tags-div
+                  // categories composition tag
+              // /.panel-default
+              //
+                kernels sidebar
+                <div id="KernelsBar" class="panel panel-default">
+                <div class="panel-heading">
+                <h3 class="panel-title">Recent Kernels (only 5)</h3>
+                </div>
+                <div class="list-group">
+                <div id="kernels"></div>
+                </div>
+                </div>
+            // /.panel-group
+          // /.sidebar
+

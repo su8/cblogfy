@@ -1,0 +1,12 @@
+{
+    "stringQuotes": {
+        "enabled": true,
+        "style": "double"
+    },
+    "importPath": {
+        "enabled": true,
+        "exclude": [],
+        "filenameExtension": true,
+        "leadingUnderscore": false
+    }
+}

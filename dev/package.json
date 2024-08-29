@@ -1,0 +1,34 @@
+{
+  "name": "empty",
+  "version": "1.0.0",
+  "description": "System failure",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wifiextender/wifiextender.github.io"
+  },
+  "author": "Hi",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "uglify-js": "latest",
+    "html-minifier": "latest",
+    "clean-css": "latest",
+    "clean-css-cli": "latest",
+    "showdown": "latest",
+    "watch": "latest",
+    "http-server": "latest",
+    "less": "latest",
+    "lesshint": "latest",
+    "bootlint": "latest",
+    "rollup": "latest",
+    "babel-cli": "latest",
+    "babel-preset-es2015": "latest",
+    "babel-plugin-array-includes": "latest"
+  },
+  "scripts": {
+    "setup": "chmod +x main; ./main 'setup'",
+    "build": "./main 'build'",
+    "clean": "./main 'clean'",
+    "build:watch": "node_modules/.bin/watch 'npm run build' src",
+    "devel": "npm run build:watch & http-server .. -c5 -p 8000"
+  }
+}

@@ -1,0 +1,26 @@
+//
+// Scrollbar
+// --------------------------------------------------
+
+body::-webkit-scrollbar {
+    width: @padding-small-horizontal !important;
+    height: @padding-small-horizontal !important;
+    background: @scroll-color-3 !important;
+    border: 1px solid @scroll-color-1 !important;
+
+    // the pseudo elems
+    &-button {
+        display: none !important;
+    }
+
+    &-thumb {
+        border: 0 !important;
+        box-shadow: none !important;
+        min-height: 28px !important;
+        background: @scroll-color-2 !important;
+    }
+
+    &-corner {
+        background: @scroll-color-3 !important;
+    }
+}

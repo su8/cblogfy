@@ -1,0 +1,163 @@
+#!/usr/bin/env bash
+
+# Copyright 04/18/2016 Aaron Caffrey https://github.com/wifiextender
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+_minify_em() {
+    mkdir -p --mode=700 '/tmp/myblog'
+    hljsTheme=$(cat ./temp/highlight.js-master/src/styles/agate.css \
+        /tmp/cyborg.css ./css/pre-compiled.css \
+        | ./temp/cleancss --s0)
+
+    ./temp/html-minifier --minify-js --minify-css --remove-comments \
+        --collapse-whitespace 'src/view/index-dev.html' | \
+            sed -e "s|@hljs-cyborg-badass@|<style>${hljsTheme}</style>|g" \
+                > ../index.html
+
+    # In Jade 'days'
+    # find 'src/view' -type f -name "*.jade" ! -name 'skeleton.jade' -print0 \
+    #     | xargs -0 ./temp/jade --out '/tmp/myblog'
+    # for x in /tmp/myblog/*.html
+    # do
+    #     ./temp/html-minifier --minify-js --remove-comments \
+    #         --collapse-whitespace "${x}" | \
+    #             sed -e "s|@hljs-cyborg-badass@|${hljsTheme}|g" \
+    #                 > ../"${x##*/}"
+    # done
+}
+
+_wget_hairyball() {
+    wget "${1}" -O "temp/${2}.tar.gz"
+    tar -xf "temp/${2}.tar.gz" -C 'temp'
+}
+
+setup() {
+    mkdir -p --mode=700 'temp'
+
+    #_wget_hairyball 'https://github.com/mishoo/UglifyJS2/archive/master.tar.gz' 'uglify'
+    _wget_hairyball 'https://github.com/isagalaev/highlight.js/archive/master.tar.gz' 'hljs'
+    _wget_hairyball 'https://github.com/wifiextender/JavaScript-Templates/archive/master.tar.gz' 'tmpl'
+
+    cd 'temp/'
+    ln -sf ../node_modules/.bin/{uglifyjs,html-minifier,cleancss,lessc,lesshint,bootlint} .
+
+    ./uglifyjs --compress --mangle -- \
+        '../node_modules/showdown/dist/showdown.js' > './showdown.min.js'
+
+    _build_tmpl
+    _build_hljs
+}
+
+_build_tmpl() {
+    cd './JavaScript-Templates-master'
+
+    npm install
+    npm run build
+
+    cp -r 'js/tmpl.min.js' ../
+}
+
+_build_hljs() {
+    declare -a _bash_keywords_to_add
+
+    cd ../highlight.js-master
+    npm install
+
+    node 'tools/build.js' :common
+    cp -r 'build/highlight.pack.js' ../highlight.min.js
+
+    # Add more bash keywords to be higlighted
+    _bash_keywords_to_add=(
+        'zcompile chroot ps mirrorselect links'
+        'reboot fsck nmap mkswap swapon apt'
+        'adduser modprobe split whoami date'
+        'eselect pacaur yaourt configure cat'
+        'gpasswd groups su rpm startx coredumpctl'
+        'ping systemctl genfstab pacstrap eix locale'
+        'hwclock wget mysql ssh ufw iptables ifconfig'
+        'ip passwd tar pacman abs cp makepkg visudo'
+        'gpg dirmngr mkdir shred dd emerge fdisk ln ls'
+        'lsblk mount umount mkfs cryptsetup sysctl openssl'
+        'export gpg2 useradd grub2 arch grub nano vi vim'
+        'apt-get yum chkconfig mkinitcpio python gcc sed'
+        'gawk awk sh touch git chmod chown make sudo patch'
+        'cfdisk svn mv service rm equery qlist qlop'
+)
+    _dat_quoting="${_bash_keywords_to_add[@]}"
+    sed -i "s|zcompile|${_dat_quoting}|g" ../highlight.min.js
+    cd ../..
+}
+
+_glue_blog() {
+    declare -a _jsfiles
+    _jsfiles=(
+        'mustache.js' 'search.js'
+        'check-post-engine.js'
+        'detectOS.js'
+        'global_stuff.js'
+    )
+    cat "${_jsfiles[@]/#/src/}" > '/tmp/combo.js'
+
+    num=`gawk 'END {print NR}' src/main.js`
+    let "num-=3"
+    sed -e "${num}r /tmp/combo.js" 'src/main.js' > '/tmp/blog-glued.js'
+}
+
+build() {
+    _glue_blog
+    declare -a _jsfiles
+    _jsfiles=(
+        'showdown.min.js'
+        'highlight.min.js'
+    )
+
+    ./temp/uglifyjs --compress 'unused=false' --mangle -- \
+        './temp/tmpl.min.js' '/tmp/blog-glued.js' > ../js/blog-engine.min.js
+
+    ./temp/uglifyjs --compress 'unused=false' --mangle -- \
+        "${_jsfiles[@]/#/temp/}" \
+        src/{showdown-highlighting.js,post.js} > ../js/post-engine.min.js
+
+    # lint and compile
+    ./temp/lesshint --config ./css/less/{.lesshintrc,build.less}
+    ./temp/lessc ./css/less/build.less '/tmp/cyborg.css'
+    ./temp/bootlint --disable 'W005' 'src/view/index-dev.html'
+
+    _minify_em
+}
+
+clean() {
+    rm -rf ./node_modules ./temp
+}
+
+main() {
+    declare -a _targets
+    _targets=('setup' 'build' 'clean')
+    [[ -z $1 ]] || [[ ! " ${_targets[@]} " =~ " $1 " ]] \
+        || [[ "${EUID}" == 0 ]] && {
+        printf '%s\n' 'Error: stupid input detected.'
+        return
+    }
+
+    case "${1}" in
+        setup)     setup     ;;
+        build)     build     ;;
+        clean)     clean     ;;
+    esac
+}
+
+main "$@"

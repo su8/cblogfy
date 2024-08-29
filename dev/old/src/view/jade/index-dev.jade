@@ -1,0 +1,24 @@
+extends ./skeleton.jade
+
+block Content
+  .page-content.col-md-6.col-sm-8
+    .panel.panel-default-outline
+      .panel-body
+        noscript
+          hr
+          |                       
+          .alert.alert-danger
+            | Oh snap! Is 
+            strong Javascript
+            |  enabled ?
+          |                     
+          hr
+        |                   
+        #entries-wrapper
+
+append zcriptz
+  script.
+    setInterval(function() {
+        window.location.reload();
+    },
+    2000);

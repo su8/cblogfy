@@ -1,0 +1,29 @@
+{
+  "name": "empty",
+  "version": "1.0.0",
+  "description": "System failure",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wifiextender/wifiextender.github.io"
+  },
+  "author": "Aaron Caffrey",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "uglify-js": "latest",
+    "html-minifier": "latest",
+    "clean-css": "latest",
+    "showdown": "latest",
+    "watch": "latest",
+    "http-server": "latest",
+    "less": "latest",
+    "lesshint": "latest",
+    "bootlint": "latest"
+  },
+  "scripts": {
+    "setup": "chmod +x main; ./main 'setup'",
+    "build": "./main 'build'",
+    "clean": "./main 'clean'",
+    "build:watch": "watch 'npm run build' src",
+    "devel": "npm run build:watch & http-server .. -p 8000"
+  }
+}

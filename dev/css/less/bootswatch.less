@@ -1,0 +1,73 @@
+// Cyborg 3.3.6
+// Bootswatch
+// -----------------------------------------------------
+
+// Typography =================================================================
+
+.text-danger,
+.text-danger:hover {
+  color: @brand-danger;
+}
+
+.text-info,
+.text-info:hover {
+  color: @brand-info;
+}
+
+// Tables =====================================================================
+
+table,
+.table {
+  color: #fff;
+
+  a:not(.btn) {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  .dropdown-menu a {
+    text-decoration: none;
+  }
+
+  .text-muted {
+    color: @text-muted;
+  }
+}
+
+.input-group-addon {
+  background-color: @btn-default-bg;
+}
+
+// Navs =======================================================================
+
+.pager {
+  a {
+    color: #fff;
+  }
+}
+
+// Indicators =================================================================
+
+.alert {
+  .alert-link,
+  a {
+    color: @alert-warning-text;
+    text-decoration: underline;
+  }
+}
+
+// Containers =================================================================
+
+a.list-group-item {
+  &.active,
+  &.active:hover,
+  &.active:focus {
+    border-color: @list-group-border;
+  }
+}
+
+// href link shadow ===========================================================
+.blur-link:hover {
+  text-shadow: 0px 0px 2px @brand-primary, 0px 0px 3px @brand-primary;
+  text-decoration: none;
+}

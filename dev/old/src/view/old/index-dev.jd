@@ -1,0 +1,243 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    |     
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    |     
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0')
+    |     
+    meta(name='description', content='Blogging useful linux tips')
+    |     
+    link(rel='shortcut icon', href='img/file/icon.ico')
+    |     
+    link(rel='canonical', href='https://wifiextender.github.io/')
+    |     
+    meta(name='author', content='Aaron')
+    |     
+    title Aaron&apos;s Blog
+    // Eliminate roundtrips
+    link(href='https://fonts.gstatic.com', rel='preconnect', crossorigin='anonymous')
+    |     
+    link(href='https://fonts.googleapis.com', rel='preconnect', crossorigin='anonymous')
+    // Get specified theme if the user selected one earlier
+    script.
+      (function() {
+      'use strict';
+      var head = document.getElementsByTagName('head')[0];
+      var bootnap = document.createElement('link');
+      var curTheme = localStorage.getItem('geminiTheme') || 'theme1';
+      bootnap.rel = 'stylesheet';
+      bootnap.id = 'currentTheme';
+      bootnap.href = './css/bootstrap-' + curTheme + '.min.css';
+      head.appendChild(bootnap);
+      })();
+    // highlighting template
+    link(rel='stylesheet', href='data:text/css;base64,@hljs-theme@')
+    // Just for the indexing sake
+    meta(name='google-site-verification', content='9jsfQ6iWNq6k4FA99epCTGLF3ZeUfUvDiJLvqDd9DkI')
+    // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
+    //if lt IE 9
+      script(src='https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js')
+      |       
+      script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
+  |   
+  body
+    // navigation bar
+    .navbar.navbar-default.navbar-static-top
+      .container
+        // center the navbar text
+        .container-fluid
+          .navbar-header
+            button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+              span.sr-only Toggle navigation
+              |               
+              span.icon-bar
+              |               
+              span.icon-bar
+              |               
+              span.icon-bar
+            |             
+            a.navbar-brand(href='#') rm -rf /
+          |           
+          #navbar.navbar-collapse.collapse
+            ul.nav.navbar-nav
+              li
+                a(href='#!frontpage') &#x274D; Home
+              |               
+              li
+                a(href='#!archive') &#x2623; Archive
+          // /.nav-collapse
+        // /.container-fluid
+      // /.container
+    // /.navbar-default
+    // blog content
+    .container
+      #content
+        .row
+          // Many thanks to stackoverlow
+          #GitModal.hide.modal.fade.in(role='dialog')
+            .modal-dialog
+              .col-xs-12.col-sm-6.col-md-6
+                form
+                  // some ugly 'hint' for the browser
+                  .modal-content
+                    .modal-header
+                      button#GitModal-close-1.close(type='button', data-dismiss='modal') &times;
+                      |                         
+                      h4.modal-title GitHub
+                    |                       
+                    .minus-bottom.modal-body
+                      .form-group.has-success
+                        input#inputFieldPassword.hide.form-control.input-xs(type='password', placeholder='♥ GitHub password:', autocomplete='on')
+                        |                           
+                        #progress-bar.plus-top.progress.progress-striped.active
+                          #cur-progress.progress-bar(style='width:0%')
+                        |                           
+                        #github-password-file-exists.hide
+                          hr
+                          |                             
+                          span.text-danger
+                            strong#oh-github-snap
+                              | Wrong password or the given filename was already submitted to GitHub earlier.
+                        |                           
+                        span#github-ok-text.hide.help-block
+                          | Done &hearts;
+                    |                       
+                    .modal-footer
+                      button#GitModal-close-2.btn.btn-default.pull-left(type='button', data-dismiss='modal') Close
+                      |                         
+                      input#to-github-btn.btn.btn-primary.pull-right.show(type='submit', value='Submit to Github')
+                  // /.modal-content
+              // /.col-xs
+            // /.modal-dialog
+          // /.modal fade in
+          // left column
+          .page-content.col-md-6.col-sm-8
+            .panel.panel-default-outline
+              .panel-body
+                noscript
+                  // javascript detection
+                  hr
+                  |                       
+                  .alert.alert-danger
+                    p
+                      | Oh snap! Is 
+                      strong Javascript
+                      |  enabled ?
+                  |                     
+                  hr
+                |                   
+                #entries-wrapper
+                // page composition tag
+              // panel-body
+            // /.panel-default
+          // /.page-content
+          // right column
+          .sidebar.col-md-3.col-sm-4
+            .panel-group
+              // hacker mode
+              .panel.panel-default-outline
+                .btn-group.btn-group-justified
+                  a#initHackerMode.btn.btn-default Hacker Mode
+                |                   
+                form#loginForm.hide.form-signin
+                  h6.form-singnin-heading.text-center Welcome back Aaron
+                  |                     
+                  .input-group
+                    span.input-group-addon &#x2694;
+                    |                       
+                    input.form-control(placeholder='GentooBox', type='text', readonly='')
+                  |                     
+                  #passwordError.form-group
+                    .input-group
+                      span.input-group-addon &#x2645;
+                      |                         
+                      input#inputPassword.form-control(placeholder='Password', type='password')
+                  |                     
+                  .text-center
+                    button#signinButton.btn.btn-primary.btn-block(type='button') Sign in
+                |                   
+                #hackerMode.hide.list-group
+                  a.list-group-item(href='#!new')
+                    strong &#x2692; New Post
+                  |                     
+                  a.list-group-item(href='#!edi')
+                    strong &#x270D; Edit Post
+                  |                     
+                  a.list-group-item(href='#!theme')
+                    strong &#x262F; Choose theme
+                  |                     
+                  a.list-group-item(href='#!settings')
+                    strong &#x2699; General Settings
+                  |                     
+                  a#browze-button.list-group-item
+                    strong &uarr; Upload files
+                  |                     
+                  a#logOut.list-group-item
+                    strong.text-danger &#x26A0; Log Out
+                  |                     
+                  input#show-file-browzer.hide(type='file', multiple='')
+                  |                     
+                  span#trololo.hide
+              // /.panel-default
+              // search form
+              .panel.panel-default
+                form
+                  .input-group
+                    input#uzer-infut.form-control(type='text', placeholder='Ask me anything')
+                    |                       
+                    .input-group-btn
+                      button#submitfutton.btn.btn-default(type='submit')
+                        | &gt;&gt;
+                  // /.input-group
+              // /.panel-default
+              // recent posts sidebar
+              #recentBar.panel.panel-default
+                .panel-heading
+                  h3.panel-title Recent Posts
+                |                   
+                .list-group
+                  #recent-posts
+                  // recent posts composition tag
+              // /.panel-default
+              // categories sidebar
+              #CategoriesBar.panel.panel-default
+                .panel-heading
+                  h3.panel-title Categories
+                |                   
+                .list-group
+                  #tags-div
+                  // categories composition tag
+              // /.panel-default
+              //
+                kernels sidebar
+                <div id="KernelsBar" class="panel panel-default">
+                <div class="panel-heading">
+                <h3 class="panel-title">Recent Kernels (only 5)</h3>
+                </div>
+                <div class="list-group">
+                <div id="kernels"></div>
+                </div>
+                </div>
+            // /.panel-group
+          // /.sidebar
+        // /.row
+      // /.content
+    // /.container
+    footer.footer
+      .container
+        p.text-muted
+          | Powered by
+          a(href='https://github.com/wifiextender/wifiextender.github.io', target='_blank') Javascript
+          | ,
+          |           rendered by your
+          |           
+          span#detect-os.text-info
+          |  browser.
+    // cat script.js | openssl dgst -sha256 -binary | openssl enc -base64
+    script(defer='', src='./js/engine.min.js')
+    |     
+    script(defer='', src='./js/config.js')
+    |     
+    link(href='https://fonts.googleapis.com/css?family=Roboto:400,700', rel='stylesheet', type='text/css')

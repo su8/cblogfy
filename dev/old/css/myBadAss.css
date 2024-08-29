@@ -1,0 +1,59 @@
+/*
+ * Open dropdowns on hover instead of click.
+ * Source: https://mpetroff.net/2015/03/bootstrap-navbar-without-jquery/
+ */
+@media (min-width: 768px) {
+  .dropdown:hover {
+    background: #e7e7e7;
+  }
+  .dropdown:hover > .dropdown-menu {
+    display: block;
+  }
+}
+
+/*
+ * The following is needed since the dropdowns are <div> elements instead
+ * of <a> elements
+ */
+.nav > li > div {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+  cursor: default;
+}
+.navbar-nav > li > div {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  line-height: 20px;
+}
+.navbar-default .navbar-nav > li > div {
+  color: rgb(119, 119, 119);
+}
+.dropdown-open {
+  background: #e7e7e7;
+}
+
+
+
+/* my /dev/null additions */
+
+/* why so serious bootstrap modal */
+.modal {
+    display:block;
+}
+
+/* container styling */
+.hide {
+    display: none;
+}
+.show {
+    display: initial;
+}
+
+/* placement */
+.minus-bottom {
+    margin-bottom: -10px;
+}
+.plus-top {
+    margin-top: 10px;
+}

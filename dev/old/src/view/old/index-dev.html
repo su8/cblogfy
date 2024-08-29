@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Blogging useful linux tips">
+    <link rel="shortcut icon" href="img/file/icon.ico" />
+    <link rel="canonical" href="https://wifiextender.github.io/">
+    <meta name="author" content="Aaron">
+
+    <title>Aaron's Blog</title>
+
+    <!-- Eliminate roundtrips -->
+    <link href='https://fonts.gstatic.com' rel='preconnect' crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com' rel='preconnect' crossorigin="anonymous">
+
+    <!-- Get specified theme if the user selected one earlier -->
+    <script>
+        (function() {
+            'use strict';
+
+            var head = document.getElementsByTagName('head')[0];
+            var bootnap = document.createElement('link');
+            var curTheme = localStorage.getItem('geminiTheme') || 'theme1';
+
+            bootnap.rel = 'stylesheet';
+            bootnap.id = 'currentTheme';
+            bootnap.href = './css/bootstrap-' + curTheme + '.min.css';
+            head.appendChild(bootnap);
+        })();
+    </script>
+
+    <!-- highlighting template -->
+    <link rel="stylesheet" href="data:text/css;base64,@hljs-theme@">
+
+    <!-- Just for the indexing sake -->
+    <meta name="google-site-verification" content="9jsfQ6iWNq6k4FA99epCTGLF3ZeUfUvDiJLvqDd9DkI">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <!--navigation bar-->
+    <div class="navbar navbar-default navbar-static-top">
+      <div class="container"><!--center the navbar text-->
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">rm -rf /</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li><a href="#!frontpage">&#x274D; Home</a></li>
+              <li><a href="#!archive">&#x2623; Archive</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </div><!--/.container-->
+    </div><!--/.navbar-default-->
+
+    <!--blog content-->
+    <div class="container">
+        <div id="content">
+          <div class="row">
+
+            <!-- Many thanks to stackoverlow -->
+              <div class="hide modal fade in" id="GitModal" role="dialog">
+                <div class="modal-dialog">
+                  <div class="col-xs-12 col-sm-6 col-md-6">
+                    <form> <!-- some ugly 'hint' for the browser -->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button id="GitModal-close-1" type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">GitHub</h4>
+                      </div>
+                      <div class="minus-bottom modal-body">
+                        <div class='form-group has-success'>
+                          <input class='hide form-control input-xs' id='inputFieldPassword'
+                                type='password' placeholder='&hearts; GitHub password:' autocomplete='on'>
+                          <div id="progress-bar" class="plus-top progress progress-striped active">
+                            <div id="cur-progress" class="progress-bar" style="width:0%"></div>
+                          </div>
+                          <div class="hide" id='github-password-file-exists'>
+                            <hr>
+                            <span class='text-danger'>
+                              <strong id='oh-github-snap'>
+                                Wrong password or the given filename was already submitted to GitHub earlier.
+                              </strong>
+                            </span>
+                          </div>
+                          <span id='github-ok-text' class='hide help-block'>
+                            Done &hearts;
+                          </span>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button id="GitModal-close-2" type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <input id='to-github-btn' class='btn btn-primary pull-right show' type='submit' value='Submit to Github'>
+                      </div>
+                    </div><!--/.modal-content-->
+                    </form>
+                  </div><!--/.col-xs-->
+                </div><!--/.modal-dialog-->
+              </div><!--/.modal fade in-->
+
+            <!--left column-->
+            <div class="page-content col-md-6 col-sm-8">
+              <div class="panel panel-default-outline">
+                <div class="panel-body">
+                  <noscript><!--javascript detection-->
+                    <hr>
+                      <div class="alert alert-danger">
+                        <p>Oh snap! Is <strong>Javascript</strong> enabled ?</p>
+                      </div>
+                    <hr>
+                  </noscript>
+                  <div id="entries-wrapper"></div><!--page composition tag-->
+                </div><!--panel-body-->
+              </div><!--/.panel-default-->
+            </div><!--/.page-content-->
+
+            <!--right column-->
+            <div class="sidebar col-md-3 col-sm-4">
+              <div class="panel-group">
+
+                <!-- hacker mode -->
+                <div class="panel panel-default-outline">
+                  <div class="btn-group btn-group-justified">
+                    <a id="initHackerMode" class="btn btn-default">Hacker Mode</a>
+                  </div>
+                  <form id="loginForm" class="hide form-signin">
+                    <h6 class="form-singnin-heading text-center">Welcome back Aaron</h6>
+                    <div class="input-group">
+                      <span class="input-group-addon">&#x2694;</span>
+                      <input class="form-control" placeholder="GentooBox" type="text" readonly>
+                    </div>
+                    <div id="passwordError" class="form-group">
+                      <div class="input-group">
+                        <span class="input-group-addon">&#x2645;</span>
+                        <input id="inputPassword" class="form-control" placeholder="Password" type="password">
+                      </div>
+                    </div>
+                    <div class="text-center">
+                      <button type="button" id="signinButton" class="btn btn-primary btn-block">Sign in</button>
+                    </div>
+                  </form>
+                  <div id="hackerMode" class="hide list-group">
+                    <a href="#!new" class="list-group-item"><strong>&#x2692; New Post</strong></a>
+                    <a href="#!edi" class="list-group-item"><strong>&#x270D; Edit Post</strong></a>
+                    <a href="#!theme" class="list-group-item"><strong>&#x262F; Choose theme</strong></a>
+                    <a href="#!settings" class="list-group-item"><strong>&#x2699; General Settings</strong></a>
+                    <a id="browze-button" class="list-group-item"><strong>&uparrow; Upload files</strong></a>
+                    <a id="logOut" class="list-group-item">
+                        <strong class="text-danger">&#x26A0; Log Out</strong></a>
+                    <input class="hide" id="show-file-browzer" type="file" multiple>
+                    <span class="hide" id="trololo"></span>
+                  </div>
+                </div><!--/.panel-default-->
+
+                <!-- search form -->
+                <div class="panel panel-default">
+                  <form>
+                    <div class="input-group">
+                      <input type="text" id="uzer-infut" class="form-control" placeholder="Ask me anything">
+                      <div class="input-group-btn">
+                        <button id="submitfutton" class="btn btn-default" type="submit">
+                          &gt;&gt;
+                        </button>
+                      </div>
+                    </div><!--/.input-group-->
+                  </form>
+                </div><!--/.panel-default-->
+
+                <!-- recent posts sidebar -->
+                <div id="recentBar" class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">Recent Posts</h3>
+                  </div>
+                  <div class="list-group">
+                    <div id="recent-posts"></div><!--recent posts composition tag-->
+                  </div>
+                </div><!--/.panel-default-->
+
+                <!-- categories sidebar -->
+                <div id="CategoriesBar" class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">Categories</h3>
+                  </div>
+                  <div class="list-group">
+                    <div id="tags-div"></div><!--categories composition tag-->
+                  </div>
+                </div><!--/.panel-default-->
+
+                <!-- kernels sidebar
+                <div id="KernelsBar" class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">Recent Kernels (only 5)</h3>
+                  </div>
+                  <div class="list-group">
+                    <div id="kernels"></div>
+                  </div>
+                </div>
+                -->
+
+              </div><!--/.panel-group-->
+            </div><!--/.sidebar-->
+
+          </div><!--/.row-->
+        </div><!--/.content-->
+    </div><!--/.container-->
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">
+          Powered by
+          <a href="https://github.com/wifiextender/wifiextender.github.io" target="_blank">Javascript</a>,
+          rendered by your
+          <span id="detect-os" class="text-info"></span> browser.
+        </p>
+      </div>
+    </footer>
+
+    <!-- cat script.js | openssl dgst -sha256 -binary | openssl enc -base64 -->
+    <script defer src="./js/engine.min.js"></script>
+    <script defer src="./js/config.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" type="text/css">
+  </body>
+</html>

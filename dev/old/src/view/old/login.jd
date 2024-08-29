@@ -1,0 +1,39 @@
+extends ./skeleton.jade
+
+block Title
+  title Login
+
+block Content
+  // Many thanks to stackoverlow
+  #GitModal.hide.modal.fade.in(role='dialog')
+    .modal-dialog
+      .col-xs-12.col-sm-6.col-md-6
+        form
+          // some ugly 'hint' for the browser
+          .modal-content
+            .modal-header
+              button#GitModal-close-1.close(type='button', data-dismiss='modal') &times;
+              |                         
+              h4.modal-title GitHub
+            |                       
+            .minus-bottom.modal-body
+              .form-group.has-success
+                input#inputFieldPassword.hide.form-control.input-xs(type='password', placeholder='&hearts; GitHub password:', autocomplete='on')
+                |                           
+                #progress-bar.plus-top.progress.progress-striped.active
+                  #cur-progress.progress-bar(style='width:0%')
+                |                           
+                #github-password-file-exists.hide
+                  hr
+                  |                             
+                  span.text-danger
+                    strong#oh-github-snap
+                      | Wrong password or the given filename was already submitted to GitHub earlier.
+                |                           
+                span#github-ok-text.hide.help-block
+                  | Done &hearts;
+            |                       
+            .modal-footer
+              button#GitModal-close-2.btn.btn-default.pull-left(type='button', data-dismiss='modal') Close
+              |                         
+              input#to-github-btn.btn.btn-primary.pull-right.show(type='submit', value='Submit to Github')

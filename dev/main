@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+
+# Copyright 04/18/2016 https://github.com/wifiextender
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# The use of GNU/Make in here is to run the most CPU
+# intensive tasks such as uglifyjs and lessc in parallel
+# utilizing all of the CPU cores
+
+_minify_html() {
+    theme=$(cat ./temp/highlight.js-master/src/styles/agate.css \
+      /tmp/cyborg.css | ./temp/cleancss -O0)
+    hljsTheme=$(echo ${theme} | perl -Mstrict -Mwarnings -pe 's|\n| |g')
+
+    # before the python usage:
+    # sed -e "s|@hljs-cyborg-badass@|<style>${hljsTheme}</style>|g" \
+
+    ./temp/html-minifier --minify-js --minify-css --remove-comments --collapse-whitespace 'src/view/index-dev.html' > /tmp/cleanHTML
+      python2 -c \
+          "with open('/tmp/cleanHTML','rt') as a: b=a.read().replace('@hljs-cyborg-badass@','<style>$hljsTheme</style>');print('{0}'.format(b))" \
+              > ../index.html
+
+    perl -Mstrict -Mwarnings -pi -e 's|\n| |g' ../index.html
+}
+
+_wget_hairyball() {
+    wget "${1}" -O "temp/${2}.tar.gz"
+    tar -xf "temp/${2}.tar.gz" -C 'temp'
+}
+
+setup() {
+    mkdir -p --mode=700 'temp'
+    _wget_hairyball 'https://github.com/isagalaev/highlight.js/archive/master.tar.gz' 'hljs'
+
+    cd 'temp/'
+    ln -sf ../node_modules/.bin/{uglifyjs,html-minifier,cleancss,lessc,lesshint,bootlint} .
+
+    cd ..
+    make -j3 minShowdown compilehljs
+
+    _glue_hljs
+}
+
+_glue_hljs() {
+    declare -a _bash_keywords_to_add
+    cd './temp/highlight.js-master'
+
+    # Add more bash keywords to be higlighted
+    _bash_keywords_to_add=(
+        'zcompile chroot ps mirrorselect links'
+        'reboot fsck nmap mkswap swapon apt'
+        'adduser modprobe split whoami date'
+        'eselect pacaur yaourt configure cat'
+        'gpasswd groups su rpm startx coredumpctl'
+        'ping systemctl genfstab pacstrap eix locale'
+        'hwclock wget mysql ssh ufw iptables ifconfig'
+        'ip passwd tar pacman abs cp makepkg visudo'
+        'gpg dirmngr mkdir shred dd emerge fdisk ln ls'
+        'lsblk mount umount mkfs cryptsetup sysctl openssl'
+        'export gpg2 useradd grub2 arch grub nano vi vim'
+        'apt-get yum chkconfig mkinitcpio python gcc sed'
+        'gawk awk sh touch git chmod chown make sudo patch'
+        'cfdisk svn mv service rm equery qlist qlop'
+)
+    _dat_quoting="${_bash_keywords_to_add[@]}"
+    sed -i "s|zcompile|${_dat_quoting}|g" ../highlight.min.js
+    cd ../..
+}
+
+_compBlog() {
+    make -s -j3 ARG1='src/main.js' ARG2=../js/blog-engine.min.js compileES6
+}
+
+_compPost() {
+    make -s -j3 ARG1='src/post/post.js' ARG2='/tmp/post.js' compileES6
+    make -s -j3 ARG1='./temp/showdown.min.js' \
+        ARG2='./temp/highlight.min.js' build
+}
+
+_checkResourceSize() {
+    [[ ! -f "${2}" ]] && {
+        echo $(wc -c < "${1}") > "${2}"
+        "${3}"
+    }
+    old_size=$(< "${2}")
+    cur_size=$(wc -c < "${1}")
+    [[ "${old_size}" != "${cur_size}" ]] && {
+      "${3}"
+      "${4}"
+      echo $(wc -c < "${1}") > "${2}"
+    }
+}
+
+_postTempConcat() {
+    cat src/{post/*,templates/*} > '/tmp/postTemp'
+}
+
+_blogTempConcat() {
+    cat src/{main.js,templates/mustache.js,misc/*} > '/tmp/blogTemp'
+}
+
+build() {
+    _blogTempConcat
+    _checkResourceSize '/tmp/blogTemp' '/tmp/blogsize' _compBlog _blogTempConcat
+
+    _postTempConcat
+    _checkResourceSize '/tmp/postTemp' '/tmp/postsize' _compPost _postTempConcat
+
+    _checkResourceSize 'src/view/index-dev.html' '/tmp/indexsize' _minify_html echo
+}
+
+clean() {
+    make -j3 clean
+}
+
+#minImg() {
+    #find file -type f -name "*.jpg" -o -name "*.png" | {
+        #while read x
+        #do
+            #mkdir --parents --mode=700 g/"${x%/*}"
+            #node_modules/.bin/imagemin "${x}" > g/"${x}"
+        #done
+    #}
+#}
+
+main() {
+    declare -a _targets
+    _targets=('setup' 'build' 'clean')
+    [[ -z $1 ]] || [[ ! " ${_targets[@]} " =~ " $1 " ]] \
+        || [[ "${EUID}" == 0 ]] && {
+        printf '%s\n' 'Error: stupid input detected.'
+        return
+    }
+
+    case "${1}" in
+        setup)     setup     ;;
+        build)     build     ;;
+        clean)     clean     ;;
+    esac
+}
+
+main "$@"

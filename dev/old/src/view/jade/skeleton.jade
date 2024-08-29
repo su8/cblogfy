@@ -1,0 +1,96 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0')
+    meta(name='description', content='Blogging useful linux tips')
+    link(rel='shortcut icon', href='img/file/icon.ico')
+    link(rel='canonical', href='https://wifiextender.github.io/')
+    meta(name='author', content='Aaron')
+    block Title
+      title Blog
+
+    style.
+      @hljs-cyborg-badass@
+
+    // Just for the indexing sake
+    meta(name='google-site-verification', content='9jsfQ6iWNq6k4FA99epCTGLF3ZeUfUvDiJLvqDd9DkI')
+
+  body
+    .navbar.navbar-default.navbar-static-top
+      .container
+        // center the navbar text
+        .container-fluid
+          .navbar-header
+            button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+              span.sr-only Toggle navigation
+              |               
+              span.icon-bar
+              |               
+              span.icon-bar
+              |               
+              span.icon-bar
+            |             
+            a.navbar-brand(href='/') rm -rf /
+          |           
+          #navbar.navbar-collapse.collapse
+            ul.nav.navbar-nav
+              li
+                a(href='#!home') &#x274D; Home
+              |               
+              li
+                a(href='#!archive') &#x2623; Archive
+    .container
+      #content
+        .row
+
+
+          block Content
+
+          .sidebar.col-md-3.col-sm-4
+            .panel-group
+
+              // Create or edit post
+              block HackerButtons
+
+              // search form
+              .panel.panel-default
+                form
+                  .input-group
+                    input#uzer-infut.form-control(type='text', placeholder='Ask me anything')
+                    |                       
+                    .input-group-btn
+                      button#submitfutton.btn.btn-default(type='submit')
+                        | &gt;&gt;
+
+              // recent posts
+              #recentBar.panel.panel-default
+                .panel-heading
+                  h3.panel-title Recent Posts
+                |                   
+                .list-group
+                  #recent-posts
+
+              // categories
+              #CategoriesBar.panel.panel-default
+                .panel-heading
+                  h3.panel-title Categories
+                |                   
+                .list-group
+                  #tags-div
+
+    footer.footer
+      .container
+        p.text-muted
+          | Powered by 
+          a(href='https://github.com/wifiextender/wifiextender.github.io', target='_blank') Javascript
+          | ,
+          |           rendered by your
+          |           
+          span#detect-os.text-info
+          |  browser.
+
+    block zcriptz
+      script(defer='', src='./js/config.js')
+      script(defer='', src='./js/blog-engine.min.js')

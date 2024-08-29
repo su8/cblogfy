@@ -1,0 +1,21 @@
+extends ./skeleton.jade
+
+block Title
+  title Aarons Blog
+
+block Content
+  .page-content.col-md-6.col-sm-8
+    .panel.panel-default-outline
+      .panel-body
+        noscript
+          hr
+          |                       
+          .alert.alert-danger
+            | Oh snap! Is 
+            strong Javascript
+            |  enabled ?
+          |                     
+          hr
+        |                   
+        #entries-wrapper
+          p Loading the database...
