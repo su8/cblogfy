@@ -44,15 +44,15 @@ int main (void) {
 
     dirPtr = dir;
     for (char *entryPtr = entry->d_name; *entryPtr; entryPtr++) {
-      if (*entryPtr == '.') break;
-      *dirPtr++ = *entryPtr;
-      }
-    *dirPtr = '\0';
+	  if (*entryPtr == '.') break;
+	  *dirPtr++ = *entryPtr;
+	}
+	*dirPtr = '\0';
 
     snprintf(buf, sizeof(buf) - 1, "generated/%s", dir);
     if (stat(buf, &st) == -1) mkdir(buf, 0700);
 
-    snprintf(buf, sizeof(buf) - 1, "pandoc -s -f markdown -t html5 -o generated/%s/index.html markdown/%s --metadata title='%s'", dir, entry->d_name, dir);
+    snprintf(buf, sizeof(buf) - 1, "pandoc -s -f markdown -t html5 -o generated/%s/index.html style.css markdown/%s --metadata title='%s'", dir, entry->d_name, dir);
     system(buf);
     buf[0] = '\0';
     dir[0] = '\0';
