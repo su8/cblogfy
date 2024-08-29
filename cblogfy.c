@@ -44,10 +44,10 @@ int main (void) {
 
     dirPtr = dir;
     for (char *entryPtr = entry->d_name; *entryPtr; entryPtr++) {
-	  if (*entryPtr == '.') break;
-	  *dirPtr++ = *entryPtr;
-	}
-	*dirPtr = '\0';
+      if (*entryPtr == '.' && *(entryPtr+1) == 'm') break;
+      *dirPtr++ = *entryPtr;
+    }
+    *dirPtr = '\0';
 
     snprintf(buf, sizeof(buf) - 1, "generated/%s", dir);
     if (stat(buf, &st) == -1) mkdir(buf, 0700);
